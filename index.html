@@ -111,15 +111,17 @@
             cursor: pointer;
         }
         .film-row input[type="checkbox"]:checked {
-            background-color: #FFA500;
+            background-color: #4CAF50; /* Zielony kolor */
         }
-        .film-row input[type="checkbox"]:checked::before {
-            content: '✔';
-            position: absolute;
-            top: 0;
-            left: 2px;
-            font-size: 16px;
-            color: black;
+
+        /* Kolor wiersza, kiedy film jest zakończony */
+        .film-row.completed {
+            background: #4CAF50; /* Zielony */
+        }
+
+        /* Kolor wiersza, gdy data zbliża się do 48 godzin przed */
+        .film-row.warning {
+            background: #FF5733; /* Czerwony */
         }
     </style>
 </head>
@@ -165,6 +167,20 @@
             films.forEach((film, index) => {
                 let row = document.createElement("div");
                 row.className = "film-row" + (film.completed ? " completed" : "");
+                
+                // Sprawdzamy, czy data zbliża się do 48 godzin przed
+                let dateParts = film.date.split(" ");
+                let filmDate = new Date(`${dateParts[0]}T${dateParts[1]}:00`);
+                let currentDate = new Date();
+                let timeDifference = filmDate - currentDate;
+                let warningClass = '';
+
+                // Jeśli data zbliża się do 48 godzin przed
+                if (timeDifference <= 48 * 60 * 60 * 1000 && timeDifference > 0) {
+                    warningClass = 'warning';
+                }
+
+                row.classList.add(warningClass);
                 row.innerHTML = `
                     <span>${film.title} (${film.category}) - ${film.date}</span>
                     <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
