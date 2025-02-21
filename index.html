@@ -223,8 +223,8 @@
             }
 
             films.push({ title, category, date, completed: false });
-            renderFilms();
-            closeModal();
+            renderFilms();  // Rysujemy film na stronie głównej
+            closeModal();   // Zamykamy modal
         }
 
         function toggleComplete(index) {
@@ -237,7 +237,7 @@
             renderFilms();
         }
 
-        renderFilms();
+        renderFilms(); // Na początku rysujemy filmy
     </script>
 </body>
 </html>
