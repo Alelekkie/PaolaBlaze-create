@@ -206,7 +206,10 @@
             let category = document.getElementById('category').value;
             let date = document.getElementById('date').value;
 
-            if (!title || !category || !date) return;
+            if (!title || !category || !date) {
+                alert("Wszystkie pola są wymagane!");
+                return;
+            }
 
             films.push({ title, category, date, completed: false });
             renderFilms();
