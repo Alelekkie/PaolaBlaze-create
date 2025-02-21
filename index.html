@@ -58,6 +58,41 @@
         button:hover {
             background: #ff7800;
         }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            position: relative;
+            top: 20%;
+            margin: 0 auto;
+            background: #333;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            color: #FFA500;
+            border-radius: 10px;
+        }
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #444;
+            color: #FFA500;
+            border: none;
+            border-radius: 5px;
+        }
+        .modal button {
+            background: #ff7800;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -65,11 +100,36 @@
         PaolaBlaze
         <br>
         Wykonane: <span id="completedCount">0</span>
-        <button onclick="addFilm()">➕</button>
+        <button onclick="showModal()">➕</button>
     </div>
     <div class="container" id="filmList"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3>Dodaj Film</h3>
+            <label for="title">Tytuł:</label>
+            <input type="text" id="title" placeholder="Podaj tytuł filmu">
+            <label for="category">Kategoria:</label>
+            <select id="category">
+                <option value="obciąganie">obciąganie</option>
+                <option value="squirt">squirt</option>
+                <option value="scenka">scenka</option>
+                <option value="film w pionie">film w pionie</option>
+                <option value="mocne jęki">mocne jęki</option>
+                <option value="pov">pov</option>
+                <option value="public">public</option>
+            </select>
+            <label for="date">Data i godzina (YYYY-MM-DD HH:MM):</label>
+            <input type="text" id="date" placeholder="Podaj datę i godzinę">
+            <button onclick="addFilmFromModal()">Dodaj</button>
+            <button onclick="closeModal()">Anuluj</button>
+        </div>
+    </div>
+
     <script>
         let films = JSON.parse(localStorage.getItem('films')) || [];
+
         function renderFilms() {
             const filmList = document.getElementById("filmList");
             filmList.innerHTML = "";
@@ -88,24 +148,37 @@
             document.getElementById("completedCount").innerText = completedCount;
             localStorage.setItem("films", JSON.stringify(films));
         }
-        function addFilm() {
-            let title = prompt("Podaj tytuł filmu:");
-            if (!title) return;
-            let categories = ["obciąganie", "squirt", "scenka", "film w pionie", "mocne jęki", "pov", "public"];
-            let category = prompt("Podaj kategorię: " + categories.join(", "));
-            if (!categories.includes(category)) return;
-            let date = prompt("Podaj datę i godzinę (YYYY-MM-DD HH:MM):");
+
+        function showModal() {
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function addFilmFromModal() {
+            let title = document.getElementById('title').value;
+            let category = document.getElementById('category').value;
+            let date = document.getElementById('date').value;
+
+            if (!title || !category || !date) return;
+
             films.push({ title, category, date, completed: false });
             renderFilms();
+            closeModal();
         }
+
         function toggleComplete(index) {
             films[index].completed = !films[index].completed;
             renderFilms();
         }
+
         function deleteFilm(index) {
             films.splice(index, 1);
             renderFilms();
         }
+
         renderFilms();
     </script>
 </body>
