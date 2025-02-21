@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PaolaBlaze</title>
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
@@ -12,7 +12,7 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
+    
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -47,7 +47,7 @@
       margin-bottom: 5px;
     }
     .completed {
-      background: #4CAF50; /* Zielony */
+      background: #4CAF50;
     }
     button {
       background: #FFA500;
@@ -97,7 +97,6 @@
       background: #ff7800;
       color: #fff;
     }
-
     /* Style dla checkboxów */
     .film-row input[type="checkbox"] {
       -webkit-appearance: none;
@@ -108,24 +107,16 @@
       border: 2px solid #FFA500;
       border-radius: 5px;
       background-color: #222;
-      position: relative;
       cursor: pointer;
     }
     .film-row input[type="checkbox"]:checked {
-      background-color: #4CAF50; /* Zielony kolor */
+      background-color: #4CAF50;
     }
-
-    /* Kolor wiersza, gdy film jest zakończony */
-    .film-row.completed {
-      background: #4CAF50;
-    }
-
     /* Kolor wiersza, gdy data zbliża się do 48 godzin przed */
     .film-row.warning {
       background: #FF5733;
     }
-
-    /* Poprawka dla napisu Wykonane */
+    /* Napis przy checkboxie */
     .completed-text {
       display: inline-block;
       margin-left: 10px;
@@ -136,18 +127,18 @@
 </head>
 <body>
   <div class="header">
-    PaolaBlaze<br />
+    PaolaBlaze<br>
     Wykonane: <span id="completedCount">0</span>
     <button type="button" onclick="showModal()">➕</button>
   </div>
   <div class="container" id="filmList"></div>
-
+  
   <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3>Dodaj Film</h3>
       <label for="title">Tytuł:</label>
-      <input type="text" id="title" placeholder="Podaj tytuł filmu" />
+      <input type="text" id="title" placeholder="Podaj tytuł filmu">
       <label for="category">Kategoria:</label>
       <select id="category">
         <option value="obciąganie">obciąganie</option>
@@ -159,14 +150,14 @@
         <option value="public">public</option>
       </select>
       <label for="date">Data i godzina (Wybierz datę i godzinę):</label>
-      <input type="datetime-local" id="date" />
+      <input type="datetime-local" id="date">
       <button type="button" onclick="addFilmFromModal()">Dodaj</button>
       <button type="button" onclick="closeModal()">Anuluj</button>
     </div>
   </div>
-
+  
   <script>
-    // Pobieramy filmy z localStorage lub inicjujemy pustą tablicę
+    // Inicjujemy filmy z localStorage lub pustą tablicę
     let films = JSON.parse(localStorage.getItem('films')) || [];
 
     function renderFilms() {
@@ -177,18 +168,14 @@
         let row = document.createElement("div");
         row.className = "film-row" + (film.completed ? " completed" : "");
 
-        // Parsujemy datę z pola (format datetime-local daje np. "2025-02-21T14:00")
+        // Parsujemy datę i sprawdzamy ostrzeżenie 48h przed terminem
         let filmDate = new Date(film.date);
         let currentDate = new Date();
         let timeDifference = filmDate - currentDate;
-        let warningClass = "";
-
-        // Jeśli data zbliża się do 48 godzin przed (a film jeszcze nie minął)
         if (timeDifference <= 48 * 60 * 60 * 1000 && timeDifference > 0) {
-          warningClass = "warning";
+          row.classList.add("warning");
         }
-
-        row.classList.add(warningClass);
+        
         row.innerHTML = `
           <span>${film.title} (${film.category}) - ${film.date}</span>
           <div style="display: flex; align-items: center;">
@@ -213,22 +200,21 @@
     }
 
     function addFilmFromModal() {
-      // Pobieramy wartości z pól
+      // Pobieramy wartości z pól i usuwamy zbędne spacje
       let title = document.getElementById("title").value.trim();
       let category = document.getElementById("category").value;
-      let date = document.getElementById("date").value; // Format: "YYYY-MM-DDTHH:MM"
-
-      // Sprawdzamy, czy wszystkie pola są wypełnione
+      let date = document.getElementById("date").value; // format: "YYYY-MM-DDTHH:MM"
+      
       if (!title || !category || !date) {
         alert("Wszystkie pola są wymagane!");
         return;
       }
-
-      // Dodajemy nowy film do tablicy
+      
+      // Dodajemy nowy film
       films.push({ title, category, date, completed: false });
-      renderFilms(); // Aktualizujemy widok
-      closeModal();  // Zamykamy modal
-
+      renderFilms();
+      closeModal();
+      
       // Resetujemy pola formularza
       document.getElementById("title").value = "";
       document.getElementById("category").selectedIndex = 0;
@@ -245,7 +231,7 @@
       renderFilms();
     }
 
-    // Na starcie renderujemy istniejące filmy
+    // Inicjalne renderowanie
     renderFilms();
   </script>
 </body>
