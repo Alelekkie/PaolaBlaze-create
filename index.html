@@ -30,6 +30,7 @@
             z-index: 1000;
             font-family: 'Pacifico', cursive;
             font-size: 24px;
+            padding: 10px;
         }
         .container {
             margin-top: 80px;
@@ -37,17 +38,15 @@
         }
         .film-row {
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
             align-items: center;
             padding: 10px;
             border-bottom: 1px solid #FFA500;
             background: #222;
             color: #FFA500;
-            margin-bottom: 10px;
         }
         .completed {
-            background: #444;
+            background: #4CAF50; /* Zielony */
         }
         button {
             background: #FFA500;
@@ -56,7 +55,7 @@
             padding: 5px 10px;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 5px;
+            margin-left: 10px;
         }
         button:hover {
             background: #ff7800;
@@ -114,7 +113,7 @@
             background-color: #4CAF50; /* Zielony kolor */
         }
 
-        /* Kolor wiersza, kiedy film jest zakończony */
+        /* Kolor wiersza, gdy film jest zakończony */
         .film-row.completed {
             background: #4CAF50; /* Zielony */
         }
@@ -123,6 +122,15 @@
         .film-row.warning {
             background: #FF5733; /* Czerwony */
         }
+
+        /* Poprawka dla napisu Wykonane */
+        .completed-text {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
     </style>
 </head>
 <body>
@@ -183,7 +191,10 @@
                 row.classList.add(warningClass);
                 row.innerHTML = `
                     <span>${film.title} (${film.category}) - ${film.date}</span>
-                    <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
+                        <span class="completed-text">${film.completed ? 'Wykonane' : 'Nie wykonane'}</span>
+                    </div>
                     <button onclick="deleteFilm(${index})">❌</button>
                 `;
                 filmList.appendChild(row);
