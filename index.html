@@ -1,243 +1,252 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaolaBlaze</title>
-    <link rel="manifest" href="manifest.json">
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-        
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #121212;
-            color: #FFA500;
-        }
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: #000;
-            color: #FFA500;
-            z-index: 1000;
-            font-family: 'Pacifico', cursive;
-            font-size: 24px;
-            padding: 10px;
-        }
-        .container {
-            margin-top: 80px;
-            padding: 10px;
-        }
-        .film-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #FFA500;
-            background: #222;
-            color: #FFA500;
-        }
-        .completed {
-            background: #4CAF50; /* Zielony */
-        }
-        button {
-            background: #FFA500;
-            color: black;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-left: 10px;
-        }
-        button:hover {
-            background: #ff7800;
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .modal-content {
-            position: relative;
-            top: 20%;
-            margin: 0 auto;
-            background: #333;
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            color: #FFA500;
-            border-radius: 10px;
-        }
-        .modal input, .modal select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background: #444;
-            color: #FFA500;
-            border: none;
-            border-radius: 5px;
-        }
-        .modal button {
-            background: #ff7800;
-            color: #fff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaolaBlaze</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-        /* Style dla checkboxów */
-        .film-row input[type="checkbox"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #FFA500;
-            border-radius: 5px;
-            background-color: #222;
-            position: relative;
-            cursor: pointer;
-        }
-        .film-row input[type="checkbox"]:checked {
-            background-color: #4CAF50; /* Zielony kolor */
-        }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #121212;
+      color: #FFA500;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #000;
+      color: #FFA500;
+      z-index: 1000;
+      font-family: 'Pacifico', cursive;
+      font-size: 24px;
+      padding: 10px;
+    }
+    .container {
+      margin-top: 80px;
+      padding: 10px;
+    }
+    .film-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #FFA500;
+      background: #222;
+      color: #FFA500;
+      margin-bottom: 5px;
+    }
+    .completed {
+      background: #4CAF50; /* Zielony */
+    }
+    button {
+      background: #FFA500;
+      color: black;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+    button:hover {
+      background: #ff7800;
+    }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+      position: relative;
+      top: 20%;
+      margin: 0 auto;
+      background: #333;
+      padding: 20px;
+      width: 80%;
+      max-width: 400px;
+      color: #FFA500;
+      border-radius: 10px;
+    }
+    .modal input,
+    .modal select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #444;
+      color: #FFA500;
+      border: none;
+      border-radius: 5px;
+    }
+    .modal button {
+      background: #ff7800;
+      color: #fff;
+    }
 
-        /* Kolor wiersza, gdy film jest zakończony */
-        .film-row.completed {
-            background: #4CAF50; /* Zielony */
-        }
+    /* Style dla checkboxów */
+    .film-row input[type="checkbox"] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #FFA500;
+      border-radius: 5px;
+      background-color: #222;
+      position: relative;
+      cursor: pointer;
+    }
+    .film-row input[type="checkbox"]:checked {
+      background-color: #4CAF50; /* Zielony kolor */
+    }
 
-        /* Kolor wiersza, gdy data zbliża się do 48 godzin przed */
-        .film-row.warning {
-            background: #FF5733; /* Czerwony */
-        }
+    /* Kolor wiersza, gdy film jest zakończony */
+    .film-row.completed {
+      background: #4CAF50;
+    }
 
-        /* Poprawka dla napisu Wykonane */
-        .completed-text {
-            display: inline-block;
-            margin-left: 10px;
-            font-weight: bold;
-            font-size: 18px;
-        }
+    /* Kolor wiersza, gdy data zbliża się do 48 godzin przed */
+    .film-row.warning {
+      background: #FF5733;
+    }
 
-    </style>
+    /* Poprawka dla napisu Wykonane */
+    .completed-text {
+      display: inline-block;
+      margin-left: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        PaolaBlaze
-        <br>
-        Wykonane: <span id="completedCount">0</span>
-        <button onclick="showModal()">➕</button>
+  <div class="header">
+    PaolaBlaze<br />
+    Wykonane: <span id="completedCount">0</span>
+    <button type="button" onclick="showModal()">➕</button>
+  </div>
+  <div class="container" id="filmList"></div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Dodaj Film</h3>
+      <label for="title">Tytuł:</label>
+      <input type="text" id="title" placeholder="Podaj tytuł filmu" />
+      <label for="category">Kategoria:</label>
+      <select id="category">
+        <option value="obciąganie">obciąganie</option>
+        <option value="squirt">squirt</option>
+        <option value="scenka">scenka</option>
+        <option value="film w pionie">film w pionie</option>
+        <option value="mocne jęki">mocne jęki</option>
+        <option value="pov">pov</option>
+        <option value="public">public</option>
+      </select>
+      <label for="date">Data i godzina (Wybierz datę i godzinę):</label>
+      <input type="datetime-local" id="date" />
+      <button type="button" onclick="addFilmFromModal()">Dodaj</button>
+      <button type="button" onclick="closeModal()">Anuluj</button>
     </div>
-    <div class="container" id="filmList"></div>
+  </div>
 
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <h3>Dodaj Film</h3>
-            <label for="title">Tytuł:</label>
-            <input type="text" id="title" placeholder="Podaj tytuł filmu">
-            <label for="category">Kategoria:</label>
-            <select id="category">
-                <option value="obciąganie">obciąganie</option>
-                <option value="squirt">squirt</option>
-                <option value="scenka">scenka</option>
-                <option value="film w pionie">film w pionie</option>
-                <option value="mocne jęki">mocne jęki</option>
-                <option value="pov">pov</option>
-                <option value="public">public</option>
-            </select>
-            <label for="date">Data i godzina (Wybierz datę i godzinę):</label>
-            <input type="datetime-local" id="date" placeholder="Wybierz datę i godzinę">
-            <button onclick="addFilmFromModal()">Dodaj</button>
-            <button onclick="closeModal()">Anuluj</button>
-        </div>
-    </div>
+  <script>
+    // Pobieramy filmy z localStorage lub inicjujemy pustą tablicę
+    let films = JSON.parse(localStorage.getItem('films')) || [];
 
-    <script>
-        let films = JSON.parse(localStorage.getItem('films')) || [];
+    function renderFilms() {
+      const filmList = document.getElementById("filmList");
+      filmList.innerHTML = "";
+      let completedCount = 0;
+      films.forEach((film, index) => {
+        let row = document.createElement("div");
+        row.className = "film-row" + (film.completed ? " completed" : "");
 
-        function renderFilms() {
-            const filmList = document.getElementById("filmList");
-            filmList.innerHTML = "";
-            let completedCount = 0;
-            films.forEach((film, index) => {
-                let row = document.createElement("div");
-                row.className = "film-row" + (film.completed ? " completed" : "");
-                
-                // Sprawdzamy, czy data zbliża się do 48 godzin przed
-                let dateParts = film.date.split(" ");
-                let filmDate = new Date(`${dateParts[0]}T${dateParts[1]}:00`);
-                let currentDate = new Date();
-                let timeDifference = filmDate - currentDate;
-                let warningClass = '';
+        // Parsujemy datę z pola (format datetime-local daje np. "2025-02-21T14:00")
+        let filmDate = new Date(film.date);
+        let currentDate = new Date();
+        let timeDifference = filmDate - currentDate;
+        let warningClass = "";
 
-                // Jeśli data zbliża się do 48 godzin przed
-                if (timeDifference <= 48 * 60 * 60 * 1000 && timeDifference > 0) {
-                    warningClass = 'warning';
-                }
-
-                row.classList.add(warningClass);
-                row.innerHTML = `
-                    <span>${film.title} (${film.category}) - ${film.date}</span>
-                    <div style="display: flex; align-items: center;">
-                        <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
-                        <span class="completed-text">${film.completed ? 'Wykonane' : 'Nie wykonane'}</span>
-                    </div>
-                    <button onclick="deleteFilm(${index})">❌</button>
-                `;
-                filmList.appendChild(row);
-                if (film.completed) completedCount++;
-            });
-            document.getElementById("completedCount").innerText = completedCount;
-            localStorage.setItem("films", JSON.stringify(films));
+        // Jeśli data zbliża się do 48 godzin przed (a film jeszcze nie minął)
+        if (timeDifference <= 48 * 60 * 60 * 1000 && timeDifference > 0) {
+          warningClass = "warning";
         }
 
-        function showModal() {
-            document.getElementById('modal').style.display = 'block';
-        }
+        row.classList.add(warningClass);
+        row.innerHTML = `
+          <span>${film.title} (${film.category}) - ${film.date}</span>
+          <div style="display: flex; align-items: center;">
+            <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
+            <span class="completed-text">${film.completed ? "Wykonane" : "Nie wykonane"}</span>
+          </div>
+          <button type="button" onclick="deleteFilm(${index})">❌</button>
+        `;
+        filmList.appendChild(row);
+        if (film.completed) completedCount++;
+      });
+      document.getElementById("completedCount").innerText = completedCount;
+      localStorage.setItem("films", JSON.stringify(films));
+    }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
+    function showModal() {
+      document.getElementById("modal").style.display = "block";
+    }
 
-        function addFilmFromModal() {
-            let title = document.getElementById('title').value;
-            let category = document.getElementById('category').value;
-            let date = document.getElementById('date').value;
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
 
-            if (!title || !category || !date) {
-                alert("Wszystkie pola są wymagane!");
-                return;
-            }
+    function addFilmFromModal() {
+      // Pobieramy wartości z pól
+      let title = document.getElementById("title").value.trim();
+      let category = document.getElementById("category").value;
+      let date = document.getElementById("date").value; // Format: "YYYY-MM-DDTHH:MM"
 
-            films.push({ title, category, date, completed: false });
-            renderFilms();  // Rysujemy film na stronie głównej
-            closeModal();   // Zamykamy modal
-        }
+      // Sprawdzamy, czy wszystkie pola są wypełnione
+      if (!title || !category || !date) {
+        alert("Wszystkie pola są wymagane!");
+        return;
+      }
 
-        function toggleComplete(index) {
-            films[index].completed = !films[index].completed;
-            renderFilms();
-        }
+      // Dodajemy nowy film do tablicy
+      films.push({ title, category, date, completed: false });
+      renderFilms(); // Aktualizujemy widok
+      closeModal();  // Zamykamy modal
 
-        function deleteFilm(index) {
-            films.splice(index, 1);
-            renderFilms();
-        }
+      // Resetujemy pola formularza
+      document.getElementById("title").value = "";
+      document.getElementById("category").selectedIndex = 0;
+      document.getElementById("date").value = "";
+    }
 
-        renderFilms(); // Na początku rysujemy filmy
-    </script>
+    function toggleComplete(index) {
+      films[index].completed = !films[index].completed;
+      renderFilms();
+    }
+
+    function deleteFilm(index) {
+      films.splice(index, 1);
+      renderFilms();
+    }
+
+    // Na starcie renderujemy istniejące filmy
+    renderFilms();
+  </script>
 </body>
 </html>
