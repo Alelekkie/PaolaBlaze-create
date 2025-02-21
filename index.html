@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaolaBlaze</title>
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #121212;
+            color: #FFA500;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #000;
+            color: #FFA500;
+            z-index: 1000;
+            font-family: 'Pacifico', cursive;
+            font-size: 24px;
+        }
+        .container {
+            margin-top: 80px;
+            padding: 10px;
+        }
+        .film-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #FFA500;
+            background: #222;
+            color: #FFA500;
+        }
+        .completed {
+            background: #444;
+        }
+        button {
+            background: #FFA500;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #ff7800;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        PaolaBlaze
+        <br>
+        Wykonane: <span id="completedCount">0</span>
+        <button onclick="addFilm()">➕</button>
+    </div>
+    <div class="container" id="filmList"></div>
+    <script>
+        let films = JSON.parse(localStorage.getItem('films')) || [];
+        function renderFilms() {
+            const filmList = document.getElementById("filmList");
+            filmList.innerHTML = "";
+            let completedCount = 0;
+            films.forEach((film, index) => {
+                let row = document.createElement("div");
+                row.className = "film-row" + (film.completed ? " completed" : "");
+                row.innerHTML = `
+                    <span>${film.title} (${film.category}) - ${film.date}</span>
+                    <input type="checkbox" ${film.completed ? "checked" : ""} onclick="toggleComplete(${index})">
+                    <button onclick="deleteFilm(${index})">❌</button>
+                `;
+                filmList.appendChild(row);
+                if (film.completed) completedCount++;
+            });
+            document.getElementById("completedCount").innerText = completedCount;
+            localStorage.setItem("films", JSON.stringify(films));
+        }
+        function addFilm() {
+            let title = prompt("Podaj tytuł filmu:");
+            if (!title) return;
+            let categories = ["obciąganie", "squirt", "scenka", "film w pionie", "mocne jęki", "pov", "public"];
+            let category = prompt("Podaj kategorię: " + categories.join(", "));
+            if (!categories.includes(category)) return;
+            let date = prompt("Podaj datę i godzinę (YYYY-MM-DD HH:MM):");
+            films.push({ title, category, date, completed: false });
+            renderFilms();
+        }
+        function toggleComplete(index) {
+            films[index].completed = !films[index].completed;
+            renderFilms();
+        }
+        function deleteFilm(index) {
+            films.splice(index, 1);
+            renderFilms();
+        }
+        renderFilms();
+    </script>
+</body>
+</html>
